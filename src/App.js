@@ -66,6 +66,14 @@ const App = props => {
       });
   }
 
+  let persons = null;
+  
+  if(personsState.showPersons) {
+    persons = <div>
+    <Person age={personsState.persons[0].age} name={personsState.persons[0].name} click={switchNameHandler.bind(this, "Joto", 777)} />
+    <Person age={personsState.persons[1].age} name={personsState.persons[1].name} changed={nameChangeHandler}>kiobas joto</Person>
+  </div>;
+  }
   return (
     // This is JSX syntax...
     // The attribute of the "button" is named "onClick" in JSX instead of "onclick" as in normal HTML.
@@ -78,12 +86,8 @@ const App = props => {
       <button
         style={style}
         onClick={togglePersonsHandler}>Toggle</button>  
-      {personsState.showPersons ?
-        <div>
-          <Person age={personsState.persons[0].age} name={personsState.persons[0].name} click={switchNameHandler.bind(this, "Joto", 777)} />
-          <Person age={personsState.persons[1].age} name={personsState.persons[1].name} changed={nameChangeHandler}>kiobas joto</Person>
-        </div> : null
-      }
+      
+        {persons}
 
     </div>
   );
