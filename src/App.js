@@ -46,6 +46,19 @@ const App = props => {
     });
   }
 
+  const deletePersonHandler = (personIndex) => {
+    // When updating state, you should make sure to not overwrite the original state.
+    // This approach mutates the original "persons" state.
+    // const persons = personsState.persons;
+    // so we make a copy of the persons object first either by slicing the original Array:
+    //const persons = personsState.persons.slice();
+    // or using the spread operator.
+    // Always mute the state in an immutable fashion.
+    const persons = [...personsState.persons]
+    persons.splice(personIndex, 1);
+    setPersonsState({...personsState, persons});
+  }
+
   const style = {
     backgroundColor: 'white',
     font: 'inherit',
@@ -70,8 +83,11 @@ const App = props => {
   
   if(personsState.showPersons) {
     persons = <div>
-      {personsState.persons.map(person => {
-         return <Person name={person.name} age={person.age}/>
+      {personsState.persons.map((person, index) => {
+         return <Person 
+         click={() => deletePersonHandler(index)}
+         name={person.name} 
+         age={person.age}/>
       })}
     
   </div>;
