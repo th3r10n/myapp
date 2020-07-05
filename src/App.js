@@ -70,8 +70,10 @@ const App = props => {
   
   if(personsState.showPersons) {
     persons = <div>
-    <Person age={personsState.persons[0].age} name={personsState.persons[0].name} click={switchNameHandler.bind(this, "Joto", 777)} />
-    <Person age={personsState.persons[1].age} name={personsState.persons[1].name} changed={nameChangeHandler}>kiobas joto</Person>
+      {personsState.persons.map(person => {
+         return <Person name={person.name} age={person.age}/>
+      })}
+    
   </div>;
   }
   return (
