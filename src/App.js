@@ -18,8 +18,8 @@ const App = props => {
   // the array[1] is the function used to mutate the state.
   const [personsState, setPersonsState] = useState({
     persons: [
-      { name: 'Max', age: 30 },
-      { name: 'Elver', age: 46 }
+      { id: 1, name: 'Max', age: 30 },
+      { id: 2, name: 'Elver', age: 46 }
     ],
     otherProperty: 'Test',
     showPersons: false
@@ -36,14 +36,24 @@ const App = props => {
     });
   }
 
-  const nameChangeHandler = (event) => {
+  const nameChangeHandler = (event, id) => {
     console.log("nameChangeHandler was called");
-    setPersonsState({
-      persons: [
-        { name: event.target.value, age: 66 },
-        { name: 'Elver', age: 77 }
-      ]
-    });
+    // The argument to find is a function that will be applied to each element of the persons Array.
+    const personIndex = personsState.persons.findIndex(p => {return p.id === id;});
+
+    // Don't mutate the original state. Make a copy of the object first.
+    const person = {...personsState.persons[personIndex]};
+
+    // These expressions are equivalent to the previous idiom:
+    // const personIndex  = personsState.persons.findIndex(p => {return p.id === id;});
+    // const person = Object.assign({}, personsState.persons[personIndex]);
+
+    person.name = event.target.value;
+
+    const persons = [...personsState.persons];
+    persons[personIndex] = person;
+
+    setPersonsState({...personsState, persons});
   }
 
   const deletePersonHandler = (personIndex) => {
@@ -82,12 +92,15 @@ const App = props => {
   let persons = null;
   
   if(personsState.showPersons) {
+    // Each child in a list should have a unique "key" prop.
     persons = <div>
       {personsState.persons.map((person, index) => {
          return <Person 
          click={() => deletePersonHandler(index)}
          name={person.name} 
-         age={person.age}/>
+         age={person.age}
+         key={person.id}
+         changed={(event) => nameChangeHandler(event, person.id)}/>
       })}
     
   </div>;
