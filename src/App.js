@@ -7,6 +7,8 @@ import './App.css';
 //import './Person/Person.css'
 // Always capitalize the first letter of a Component's name. 
 import Person from './Person/Person';
+import ValidationComponent from './ValidationComponent/ValidationComponent'
+import CharComponent from './CharComponent/CharComponent'
 
 
 // If the function name is not in capital letters i.e. "App", React will throw this message while using the useState hook:
@@ -22,7 +24,10 @@ const App = props => {
       { id: 2, name: 'Elver', age: 46 }
     ],
     otherProperty: 'Test',
-    showPersons: false
+    showPersons: false,
+    textLenght: 0,
+    charComponentArray: null
+
   });
 
   const switchNameHandler = (newName, newAge) => {
@@ -39,10 +44,10 @@ const App = props => {
   const nameChangeHandler = (event, id) => {
     console.log("nameChangeHandler was called");
     // The argument to find is a function that will be applied to each element of the persons Array.
-    const personIndex = personsState.persons.findIndex(p => {return p.id === id;});
+    const personIndex = personsState.persons.findIndex(p => { return p.id === id; });
 
     // Don't mutate the original state. Make a copy of the object first.
-    const person = {...personsState.persons[personIndex]};
+    const person = { ...personsState.persons[personIndex] };
 
     // These expressions are equivalent to the previous idiom:
     // const personIndex  = personsState.persons.findIndex(p => {return p.id === id;});
@@ -53,7 +58,7 @@ const App = props => {
     const persons = [...personsState.persons];
     persons[personIndex] = person;
 
-    setPersonsState({...personsState, persons});
+    setPersonsState({ ...personsState, persons });
   }
 
   const deletePersonHandler = (personIndex) => {
@@ -66,7 +71,7 @@ const App = props => {
     // Always mute the state in an immutable fashion.
     const persons = [...personsState.persons]
     persons.splice(personIndex, 1);
-    setPersonsState({...personsState, persons});
+    setPersonsState({ ...personsState, persons });
   }
 
   const style = {
@@ -84,26 +89,93 @@ const App = props => {
     // useState in the class based Components will merge automatically the new state so with that hook we can use:
     // useState({showPersons: !doesShow})
     setPersonsState(
-      {...personsState,
-         showPersons: !doesShow
+      {
+        ...personsState,
+        showPersons: !doesShow
       });
   }
 
+  const textChangeHandler = (event) => {
+    console.log("textChangeHandler was called");
+    let textLength = { ...personsState.textLenght };
+
+    let text = { ...personsState.text };
+
+    let charComponentArray = { ...personsState.charComponentArray };
+    // These expressions are equivalent to the previous idiom:
+    // const personIndex  = personsState.persons.findIndex(p => {return p.id === id;});
+    // const person = Object.assign({}, personsState.persons[personIndex]);
+
+    textLength = event.target.value.length;
+
+    //setPersonsState({ ...personsState, textLength });
+
+    text = event.target.value;
+    console.log("Text:" + text);
+
+    let textArray = [];
+    for(let index in text) {
+      console.log("idx: " + index)
+      textArray.push(text.charAt(index))
+    }
+    console.log("textArray: " + textArray.toString())
+
+    charComponentArray = <div>
+      {textArray.map((letter, index) => {
+        console.log('letter: ' + letter)
+        console.log('index: ' + index)
+        return <CharComponent
+          click={() => deleteCharComponentHandler(index)}
+          value={letter}
+          key={index}
+        />
+      })}
+</div>;
+
+setPersonsState({ ...personsState, textLength, charComponentArray });
+    // charComponentArray = <div>
+    //   {text.map((letter, index) => {
+    //     return <CharComponent
+    //       click={() => deleteCharComponentHandler(index)}
+    //       value={letter}
+    //       key={index}
+    //     />
+    //   })}
+
+    //</div>
+
+  };
+
+  const deleteCharComponentHandler = (componentIndex) => {
+    // When updating state, you should make sure to not overwrite the original state.
+    // This approach mutates the original "persons" state.
+    // const persons = personsState.persons;
+    // so we make a copy of the persons object first either by slicing the original Array:
+    //const persons = personsState.persons.slice();
+    // or using the spread operator.
+    // Always mute the state in an immutable fashion.
+    // const persons = [...personsState.persons]
+    // persons.splice(personIndex, 1);
+    // setPersonsState({...personsState, persons});
+    console.log('CharComponent was clicker')
+  }
+
+  //let charComponentArray = null;
   let persons = null;
-  
-  if(personsState.showPersons) {
+
+  if (personsState.showPersons) {
     // Each child in a list should have a unique "key" prop.
     persons = <div>
       {personsState.persons.map((person, index) => {
-         return <Person 
-         click={() => deletePersonHandler(index)}
-         name={person.name} 
-         age={person.age}
-         key={person.id}
-         changed={(event) => nameChangeHandler(event, person.id)}/>
+        return <Person
+          click={() => deletePersonHandler(index)}
+          name={person.name}
+          age={person.age}
+          key={person.id}
+          changed={(event) => nameChangeHandler(event, person.id)} />
       })}
-    
-  </div>;
+
+    </div>;
   }
   return (
     // This is JSX syntax...
@@ -113,13 +185,19 @@ const App = props => {
       <button
         style={style}
         onClick={switchNameHandler.bind(this, "Elver", 666)}>Click</button>
-      <br/>
+      <br />
       <button
         style={style}
-        onClick={togglePersonsHandler}>Toggle</button>  
-      
-        {persons}
+        onClick={togglePersonsHandler}>Toggle</button>
 
+      {persons}
+      <br />
+      <input type="text" onChange={(event) => textChangeHandler(event)} />
+      <br />
+      <p id="length">{personsState.textLength}</p>
+      <ValidationComponent inputLength={personsState.textLength} />
+      <CharComponent />
+      {personsState.charComponentArray}
     </div>
   );
 
