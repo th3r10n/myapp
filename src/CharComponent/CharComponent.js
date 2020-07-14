@@ -6,7 +6,7 @@ const charComponent = (props) => {
     //const age = Math.floor(Math.random() * 30);
     
 return (
-    <div className="CharComponent">
+    <div className="CharComponent" onClick={props.click}>
         <p>{props.value}</p>
     </div>
 );

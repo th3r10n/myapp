@@ -26,7 +26,8 @@ const App = props => {
     otherProperty: 'Test',
     showPersons: false,
     textLenght: 0,
-    charComponentArray: null
+    charComponentArray: null,
+    textArray: []
 
   });
 
@@ -113,26 +114,28 @@ const App = props => {
     text = event.target.value;
     console.log("Text:" + text);
 
-    let textArray = [];
+    let textArray = { ...personsState.textArray };
+    textArray = []
+    console.log("textArray1: " + textArray.toString());
     for(let index in text) {
       console.log("idx: " + index)
       textArray.push(text.charAt(index))
     }
-    console.log("textArray: " + textArray.toString())
+    console.log("textArray2: " + textArray.toString())
 
-    charComponentArray = <div>
-      {textArray.map((letter, index) => {
-        console.log('letter: ' + letter)
-        console.log('index: ' + index)
-        return <CharComponent
-          click={() => deleteCharComponentHandler(index)}
-          value={letter}
-          key={index}
-        />
-      })}
-</div>;
+//     charComponentArray = <div>
+//       {textArray.map((letter, index) => {
+//         console.log('letter: ' + letter)
+//         console.log('index: ' + index)
+//         return <CharComponent
+//           click={() => deleteCharComponentHandler(index)}
+//           value={letter}
+//           key={index}
+//         />
+//       })}
+// </div>;
 
-setPersonsState({ ...personsState, textLength, charComponentArray });
+setPersonsState({ ...personsState, textLength, charComponentArray, textArray });
     // charComponentArray = <div>
     //   {text.map((letter, index) => {
     //     return <CharComponent
@@ -157,7 +160,34 @@ setPersonsState({ ...personsState, textLength, charComponentArray });
     // const persons = [...personsState.persons]
     // persons.splice(personIndex, 1);
     // setPersonsState({...personsState, persons});
-    console.log('CharComponent was clicker')
+    ////
+    // The argument to find is a function that will be applied to each element of the persons Array.
+    const textArrayTemp = [...personsState.textArray]
+    const textArray = []
+    textArrayTemp.forEach((letter, index) =>{
+      if(componentIndex !== index) {
+        textArray.push(letter);
+      }
+    });
+    console.log('textArray: ' + textArray);
+
+
+
+    // Don't mutate the original state. Make a copy of the object first.
+    //const person = { ...personsState.persons[personIndex] };
+
+    // These expressions are equivalent to the previous idiom:
+    // const personIndex  = personsState.persons.findIndex(p => {return p.id === id;});
+    // const person = Object.assign({}, personsState.persons[personIndex]);
+
+    //person.name = event.target.value;
+
+    //const persons = [...personsState.persons];
+    //persons[personIndex] = person;
+
+    setPersonsState({ ...personsState, textArray });
+    ////
+    console.log('CharComponent was clicked')
   }
 
   //let charComponentArray = null;
@@ -192,12 +222,20 @@ setPersonsState({ ...personsState, textLength, charComponentArray });
 
       {persons}
       <br />
-      <input type="text" onChange={(event) => textChangeHandler(event)} />
+      <input type="text" onChange={(event) => textChangeHandler(event)} value={personsState.textArray.join('')}/>
       <br />
       <p id="length">{personsState.textLength}</p>
       <ValidationComponent inputLength={personsState.textLength} />
       <CharComponent />
-      {personsState.charComponentArray}
+      {personsState.textArray.map((letter, index) => {
+        console.log('letter: ' + letter)
+        console.log('index: ' + index)
+        return <CharComponent
+          click={() => deleteCharComponentHandler(index)}
+          value={letter}
+          key={index}
+        />
+      })}
     </div>
   );
 
