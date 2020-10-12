@@ -10,7 +10,7 @@ import Person from './Person/Person';
 import ValidationComponent from './ValidationComponent/ValidationComponent';
 import CharComponent from './CharComponent/CharComponent';
 //import Radium, { StyleRoot } from 'radium';
-import styled from 'styled-components';
+//import styled from 'styled-components';
 
 
 
@@ -91,17 +91,17 @@ const App = props => {
   }
 
   // We use a String which is a symple CSS. See difference with 'style' constant above.
-  const StyledButton = styled.button`
-    background-color: ${props => props.alt ? 'red' :'green'};
-    font: inherit;
-    border: 1px solid blue;
-    padding: 8px;
-    cursor: pointer;
-    // We can use the Radium selectors as such:
-    &:hover {
-      background-color: red;
-    }
-  `;
+  // const StyledButton = styled.button`
+  //   background-color: ${props => props.alt ? 'red' :'green'};
+  //   font: inherit;
+  //   border: 1px solid blue;
+  //   padding: 8px;
+  //   cursor: pointer;
+  //   // We can use the Radium selectors as such:
+  //   &:hover {
+  //     background-color: red;
+  //   }
+  // `;
 
   const togglePersonsHandler = () => {
     const doesShow = personsState.showPersons;
@@ -233,12 +233,12 @@ setPersonsState({ ...personsState, textLength, charComponentArray, textArray });
     // To get rid of: 
     // Uncaught Error: To use plugins requiring `addCSS` (e.g. keyframes, media queries), please wrap your application in the StyleRoot component. Component name: `Object`.
     // wrap the returned component in the StyleRoot element.
-    //<StyleRoot> We will use styled components instead
+    // Removed <StyledRoot> We will use styled components instead
     <div className="App">
       <h1>Hi I'm a React App</h1>
-     <StyledButton alt={personsState.showPersons}
+     <button 
         onClick={switchNameHandler.bind(this, "Elver", 666)}>Click
-        </StyledButton>
+        </button>
       <br />
       <button key='button2'
         style={style}
