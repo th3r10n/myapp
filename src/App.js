@@ -7,8 +7,11 @@ import './App.css';
 //import './Person/Person.css'
 // Always capitalize the first letter of a Component's name. 
 import Person from './Person/Person';
-import ValidationComponent from './ValidationComponent/ValidationComponent'
-import CharComponent from './CharComponent/CharComponent'
+import ValidationComponent from './ValidationComponent/ValidationComponent';
+import CharComponent from './CharComponent/CharComponent';
+//import Radium, { StyleRoot } from 'radium';
+import styled from 'styled-components';
+
 
 
 // If the function name is not in capital letters i.e. "App", React will throw this message while using the useState hook:
@@ -36,7 +39,7 @@ const App = props => {
     // setPersonsState will not merge but instead it will replace the "state" with its argument.
     setPersonsState({
       persons: [
-        { name: newName, age: newAge },
+        //{ name: newName, age: newAge },
         { name: 'Elver', age: 200 }
       ]
     });
@@ -80,8 +83,25 @@ const App = props => {
     font: 'inherit',
     border: '1px solid blue',
     padding: '8px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    // We can use the Radium selectors as such:
+    ':hover': {
+      backgroundColor: 'red'
+    }
   }
+
+  // We use a String which is a symple CSS. See difference with 'style' constant above.
+  const StyledButton = styled.button`
+    background-color: ${props => props.alt ? 'red' :'green'};
+    font: inherit;
+    border: 1px solid blue;
+    padding: 8px;
+    cursor: pointer;
+    // We can use the Radium selectors as such:
+    &:hover {
+      background-color: red;
+    }
+  `;
 
   const togglePersonsHandler = () => {
     const doesShow = personsState.showPersons;
@@ -210,13 +230,17 @@ setPersonsState({ ...personsState, textLength, charComponentArray, textArray });
   return (
     // This is JSX syntax...
     // The attribute of the "button" is named "onClick" in JSX instead of "onclick" as in normal HTML.
+    // To get rid of: 
+    // Uncaught Error: To use plugins requiring `addCSS` (e.g. keyframes, media queries), please wrap your application in the StyleRoot component. Component name: `Object`.
+    // wrap the returned component in the StyleRoot element.
+    //<StyleRoot> We will use styled components instead
     <div className="App">
       <h1>Hi I'm a React App</h1>
-      <button
-        style={style}
-        onClick={switchNameHandler.bind(this, "Elver", 666)}>Click</button>
+     <StyledButton alt={personsState.showPersons}
+        onClick={switchNameHandler.bind(this, "Elver", 666)}>Click
+        </StyledButton>
       <br />
-      <button
+      <button key='button2'
         style={style}
         onClick={togglePersonsHandler}>Toggle</button>
 
@@ -237,8 +261,14 @@ setPersonsState({ ...personsState, textLength, charComponentArray, textArray });
         />
       })}
     </div>
+    //</StyleRoot>
   );
 
 }
+// To use Radium we use a high order component. We do this by wrapping a component inside another component. We can use this in 
+// class and functional components.
+// To avoid:
+// Uncaught Error: To use plugins requiring `addCSS` (e.g. keyframes, media queries), please wrap your application in the StyleRoot component. Component name: `Object`.
+// we need to use wrap the main application with the StyleRoot element.
 
 export default App;
