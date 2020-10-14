@@ -11,7 +11,7 @@ import ValidationComponent from './ValidationComponent/ValidationComponent';
 import CharComponent from './CharComponent/CharComponent';
 //import Radium, { StyleRoot } from 'radium';
 //import styled from 'styled-components';
-
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 
 
 // If the function name is not in capital letters i.e. "App", React will throw this message while using the useState hook:
@@ -217,12 +217,12 @@ setPersonsState({ ...personsState, textLength, charComponentArray, textArray });
     // Each child in a list should have a unique "key" prop.
     persons = <div>
       {personsState.persons.map((person, index) => {
-        return <Person
+        return <ErrorBoundary key={person.id}><Person
           click={() => deletePersonHandler(index)}
           name={person.name}
           age={person.age}
-          key={person.id}
-          changed={(event) => nameChangeHandler(event, person.id)} />
+          
+          changed={(event) => nameChangeHandler(event, person.id)} /></ErrorBoundary>
       })}
 
     </div>;

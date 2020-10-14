@@ -27,6 +27,9 @@ const person = (props) => {
     //         width: '450px'
     //     }
     // };
+    if(Math.random() > 0.7) {
+        throw new Error('Throwing error in Person function');
+    }
     return (
         <div className={classes.Person}>
             <p onClick={props.click}>I'm a {props.name}, and I'm {props.age} years old.</p>
